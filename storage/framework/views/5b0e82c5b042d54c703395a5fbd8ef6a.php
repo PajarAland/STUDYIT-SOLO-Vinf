@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course View</title>
-    <link rel="stylesheet" href="{{ asset('css/stylesCor.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/stylesCor.css')); ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -15,7 +15,7 @@
 
     <div class="arw-back">
         <a href="../page/homePage.html">
-            <img src="{{ asset('image/backarrow.png') }}" alt="Back to Course View">
+            <img src="<?php echo e(asset('image/backarrow.png')); ?>" alt="Back to Course View">
         </a>
     </div>
 
@@ -98,7 +98,7 @@
 </div>
 
     <script>
-        const apiUrl = 'http://localhost:3000/api/modulsByCourseID/{{$courses->id}}';
+        const apiUrl = 'http://localhost:3000/api/modulsByCourseID/<?php echo e($courses->id); ?>';
         const taskUploadUrl = 'http://localhost:3000/api/tasks/'; // API endpoint for uploading tasks
         const baseUrl = 'http://localhost:8000/backend-uploads/';
         const commentApiUrl = 'http://localhost:3000/api/comments/';
@@ -367,3 +367,4 @@ loadComments();
     </script>
 </body>
 </html>
+<?php /**PATH C:\TelkomUniversity\Semester6\TubesKomentar\STUDYIT-SOLO-Vinf\resources\views/user/modul.blade.php ENDPATH**/ ?>
