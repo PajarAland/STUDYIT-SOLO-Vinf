@@ -1,0 +1,745 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+html{
+    scroll-behavior: smooth;
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Inter",sans-serif;
+}
+body{
+    max-width: 100vw;
+    background-color: #f6f9ff;
+
+}
+
+.container-fluid {
+    padding: 0.2rem;
+    color: #113F67;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+.nav-brand{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 2rem;
+}
+.nav-brand img{
+    width: 100%;
+    height: 2.9rem;
+    margin-right: 1rem;
+}
+.nav-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    
+}
+.nav-menu .nav-list{
+    display: flex;
+    flex-direction: row;
+    margin-left: 2rem;
+}
+.nav-menu .nav-button{
+    margin-left: 10rem;
+}   
+.nav-list li {
+    display: inline;
+    list-style-type: none;
+    margin-left: 4.5rem;
+    padding-left: 3rem;
+}
+
+li{
+    list-style-type: none;
+    
+}
+a{
+    text-decoration: none;
+}
+
+.nav-list li a{
+    text-decoration: none;
+    color: #002982;
+    font-weight:500;
+    font-size: 1.2rem;
+}
+.nav-button{
+    padding-right: 3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;   
+}
+
+.btnSignup {
+   margin-left:2rem;
+   height: 3rem;
+   background-color: #018BFA;
+   border-radius: 50px;
+   border: 1px solid #018BFA;
+} 
+.btnLogin {
+    height: 3rem;
+    background-color: white;
+    border-radius: 50px; 
+    border: 1px solid #018BFA;
+ } 
+ 
+.btnSignup a{
+    padding: 1rem;
+    color: white;
+}
+.btnLogin a{
+    padding: 1rem;
+    color: #018BFA;
+     
+ }  
+
+/* Content CTA */
+
+.hero{
+    height: 40rem;
+    display: flex;
+    flex-direction: row;    
+    background-color: #f6f9ff;
+
+}
+.content{
+    padding: 5rem;
+    width: 60%;
+    
+}
+.img-content{
+    margin-top: 4rem;
+    margin-left: 6rem;
+    height:50%;
+}
+.hero .content h1{
+    font-size: 3.5rem;
+    font-weight: bolder;
+    color:#002982;
+    margin: 0;
+}
+.hero .content h1 span{
+    color: #018BFA
+}
+.hero .content h2{
+    font-size: 1.3rem;
+    font-weight:normal;
+    margin-left: 0.5rem;
+    
+}
+.hero .content .btn{
+   width:11rem;
+   height: 4rem;
+   margin-left: 0.5rem;
+   background-color: #018BFA;
+   border: none;
+   margin-top: 2rem;
+   font-size: 1.5rem;
+   color: white;
+}
+/* End Content CTA */
+
+/* Content1 */
+.benefits-container{
+   
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5rem;
+}
+.title-benefits{
+    font-size: 2rem;
+    color:#002982;
+    width: 40%;
+    text-align: center;
+}
+.content-benefits{
+    margin-left: 4rem;
+    width: 30rem;
+    text-align: center;
+    color: #002982;
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    padding: 3rem;
+    margin-left: 7rem;
+    margin-right: 3rem;
+    margin-bottom: 3rem;
+
+}
+.content-benefits li{
+    list-style: decimal;
+    margin-top: 1rem;
+    text-align: justify;
+}
+.content-benefits li span{
+    font-weight: bold;
+}
+.testimoni-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-justify: auto;
+    margin-bottom: 10rem;
+    
+}
+
+.title-testimoni{
+    width: 40%;
+    font-size: 2rem;
+    text-align: center;
+    align-items: center;
+}
+.content-testimoni{
+    width: 30rem;
+    margin-right: 7rem;
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    padding: 2rem;
+    justify-content: center;
+    align-items: center;
+    margin-left: 7rem;
+}
+.testimoni-container p{
+    padding-bottom: 0.5rem;
+    text-align: center;
+}
+.testimoni-container span p{
+    padding-bottom: 2rem;
+   
+}
+.benefits-container, .testimoni-container {
+    opacity: 0;
+    transform: translateX(-100%); /* Slide in from left for benefits */
+    transition: transform 2s ease-out, opacity 0.6s ease-out;
+  }
+  
+  .testimoni-container {
+    transform: translateX(100%); /* Slide in from right for testimonials */
+  }
+  
+  /* Active state when element is in view */
+  .benefits-container.active, .testimoni-container.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+/* End Content1 */
+
+/* Content Bootcamp */
+.search-input{
+    margin-top: 1rem;
+    margin-left: 4rem;
+    justify-content: center;
+    width:90%; 
+    padding: 10px 10px 10px 40px; 
+    font-size: 16px; 
+    border: 1px solid white; 
+    border-radius: 4px;
+    background:url(../asset/image/search.png) no-repeat 10px center ; 
+    background-size: 20px 20px; 
+    color: white;
+}
+.search-input::placeholder {
+    color: white;
+}
+#course-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#bootcamp{
+    font-size: 3rem;
+    color: #002982;
+    width: 100%;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.bootcamp-container .row{
+    margin:0.5rem 10rem 0 0;
+    width: 100%;
+}
+.card{
+    width: 300px;
+    height: 300px;
+    background-color: #002982;
+    border-radius: 10px;
+    margin: 12px 20px;
+}
+.card-img-top{
+   border-radius: 10px;
+   width: 100%;
+   height: 190px;
+}
+
+.card-body{
+    padding:1rem;  
+    color: white;
+    font-weight:600;
+}
+
+.date-container{
+    display: flex;
+    margin-top: 1rem;
+}
+.card-body .date-card{
+    margin-top: 0.2rem;
+    margin-left: 0.5rem;
+    font-size: 1rem;
+    font-weight:300;
+ 
+}
+.card-body img{
+    height: 1.4rem;
+}
+/* Footer */
+footer{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin-top: 5rem;
+   
+
+}
+.container-content-footer{
+    display: flex;
+    flex-direction: row;
+    padding: 0rem 12rem 0rem;   
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    align-items: center;
+    
+    
+}
+.container-footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+
+}
+.container-logo {
+    width: 20%;
+    
+
+}
+.container-logo img{
+    margin-top: 1rem;
+    width: 70%;
+}
+.container-footer{
+    color: #002982;
+    font-size: 2rem;
+    margin-left: 20rem;
+    
+    
+    
+}
+.container-list{
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: row;
+    padding-top: 1rem;
+    
+    
+    
+}
+.Support, .Socials{
+   
+    padding-left: 6rem;
+}
+.content-socials li, .content-support li, .content-about li{
+    padding-top: 1rem;
+}
+footer hr{
+    width: 95%;
+    border: 1px solid #002982;
+    margin-left: 2rem;
+}
+.container-copyright{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+.copyright{
+    display: flex;
+    flex-direction: row;
+    padding: 0rem 3rem 0rem;
+    align-items: center;
+    justify-content: center;
+}
+.copyright p{
+    margin-left: 2rem;
+    font-size: 1rem;
+    color: #002982;
+    
+}
+.copyright span p{
+    margin-left: 8rem;
+}
+.back-top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4rem;
+}
+.back-top p{
+    font-size: 1rem;
+    
+}
+.back-top img{
+    width: 10%;
+    margin-left: 0rem;
+    
+    
+}
+
+
+
+/* Desktop */
+@media (max-width: 1280px) {
+    body{
+        width: 100vw;
+        box-sizing:content-box;
+    }
+    .nav {
+        padding: 10px 40px;
+        width: 100vw;
+        background-color: #113F67;
+    }
+
+    .hero .content h1 {
+        font-size: 50px;
+    }
+
+    .container-bootcamp {
+        margin: 5px 50px;
+    }
+   
+    .card-bootcamp {
+        width: 250px;
+        height: 250px;
+    }
+
+    .nav .navbar-menu li {
+        margin-left: 20px;
+    }
+    .img-content{
+        width: 50%;
+    }
+}
+
+/* Mobile (below 768px) */
+@media (max-width: 768px) {
+    
+    .nav-brand{
+        width: 50%;
+    }
+    .nav-brand img{
+        width: 15%;
+        height: 5%;
+    }
+
+    /* Display the hamburger icon */
+    .hamburger {
+        display: block;
+        font-size: 24px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-left: 8rem;
+        color: #113F67;
+    }
+    .nav-menu .nav-list{
+        margin-left: -3rem;
+    }
+    .nav-menu {
+        
+        position: fixed;
+        top: 0;
+         /* Start the sidebar off-screen */
+        width: 80%; /* Full viewport width */
+        right: -100%;
+        height: 100vh;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #002982;
+        color: #fff;
+        transition: right 0.3s ease; /* Smooth slide-in effect */
+        z-index: 100;
+       
+    }
+
+    .nav-menu.active {
+        right: 0; /* Slide in from the right */
+    }
+
+    /* Style for Nav List in Sidebar */
+    .nav-list ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        width: 100%;
+    }
+
+    .nav-list li {
+        width: 100%;
+        margin:  0;
+        text-align: center;
+        color: #f6f9ff;
+    }
+    .nav-list li a{
+        color: #f6f9ff;
+    }
+
+    .nav-list a {
+
+        text-decoration: none;
+        color: #ffffff;
+        font-size: 1.2rem;
+        font-weight: 500;
+        padding: 1rem;
+        display: block;
+        width: 100%;
+    }
+
+    .nav-list a:hover, .nav-button a:hover{
+        background-color: #0b2e4f;
+    }
+    .nav-menu .nav-button{
+        margin-left: 3rem;
+    }
+
+    /* Style for Buttons in Sidebar */
+    .nav-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+
+    }
+
+    .nav-button button {
+        width: 12rem; /* Make buttons smaller to fit within the sidebar */
+        margin: 0.5rem 0;
+        padding: 0.8rem;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+    .btnLogin, .btnSignup {
+        font-weight: 500;
+        background-color: transparent;
+       
+    }
+    
+   
+
+    .nav-button a {
+        font-size: 1.2rem;
+        text-decoration: none;
+        color: white;
+     
+    }
+
+    .hero{
+        height: 25rem;
+    }
+    .hero .content{
+        padding: 3rem 2rem 2rem;
+        width: 100%;
+    }
+    .content-image{
+        display: none;
+    }
+    .hero .content h1 {
+        font-size: 4rem;
+    }
+    .content #cta{
+        margin-top: 1rem;
+    }
+    .hero .content .btn{
+        margin-left: 0rem;
+        width: 7rem;
+        height: 3rem;
+        font-size: 1rem;
+    }
+    .hero .content h2{
+        margin-left: 0rem;
+        margin-top: 1rem;
+    }
+    .benefits-container, .testimoni-container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .title-benefits, .title-testimoni{
+        width: 100%;
+    }
+    .title-benefits h1{
+        width: 100%;
+        font-size:2.2rem;
+        margin-bottom: 1rem;
+    }
+    .content-benefits, .content-testimoni{
+        
+        padding:1.5rem;
+        width: 100%;
+        font-size: 0.7rem;
+        margin: 0rem;
+    }
+    .content-benefits li{
+        margin-top: 0.5rem;
+    }
+    
+    .title-testimoni h1{
+        width: 100%;
+        font-size:2rem;
+        margin-bottom: 1rem;
+    }
+    .testimoni-container{
+        flex-direction: column-reverse;
+    }
+
+    /* Testimoni Container */
+    .bootcamp-container{
+        margin-top: 0rem;
+        padding-top: 0rem ;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    #bootcamp{
+        margin-top: 3rem;
+        font-size: 2rem;
+    }
+    .bootcamp-container .row{
+        margin-right: 0;
+    }
+    
+    .container-content-footer{
+        flex-direction: row;
+        padding-left: 0rem;
+        justify-content: center;
+        align-items: center;
+    }
+    .container-footer h1{
+        text-align: center;
+    }
+    footer hr{
+        width: 90%;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .container-footer{
+        color: #002982;
+        font-size: 1.5rem;
+        justify-content: center;
+        margin-left: 12rem;
+    }
+    
+    .Support, .Socials{
+        padding-left: 2rem;
+    }
+    .container-copyright {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+    }
+    .back-top{
+        font-size: 0.7rem;
+        margin-right: 1rem;
+    }
+    .copyright p{
+        font-size: 0.7rem;
+        margin-left: 0rem;
+        
+    }
+    .copyright{
+        padding-left: 2rem;
+    }
+    .container-list{
+        width: 100%;
+    }
+    .copyright span p{
+        margin-left: 2.5rem;
+        font-size: 0.7rem;
+    }
+    .back-top img{
+        width: 15%;
+    }
+   .back-top p{
+    font-size: 0.7rem;
+   }
+
+}
+@media (min-width: 769px) {
+    .hamburger {
+        display: none;
+    }
+}
+
+/* Smaller Mobile (below 480px) */
+@media (max-width: 480px) {
+    .nav {
+        padding: 10px;
+    }
+
+    .hero .content h1 {
+        font-size: 28px;
+    }
+
+    .hero .content h2 {
+        font-size: 16px;
+    }
+
+    .card-bootcamp {
+        width: 100%;
+        height: auto;
+    }
+
+    .nav .navbar-menu li {
+        font-size: 16px;
+    }
+
+    .nav .navbar-menu li .btnLogin, .nav .navbar-menu li .btnEnroll {
+        width: 150px;
+        height: 40px;
+    }
+}

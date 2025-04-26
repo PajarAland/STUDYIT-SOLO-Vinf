@@ -1,0 +1,80 @@
+body,
+html {
+    font-family: Inter, sans-serif;
+    color: #113F67;   
+}
+
+h3{
+    font-size: 20;
+    font-weight: normal;
+}
+
+.reset-pass-container {
+    width: 400px;
+    margin: 0 auto;
+    /* Centers the container on the page */
+    margin-top: 300px;
+}
+
+.form-container div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    /* Optional spacing between form fields */
+}
+
+.form-container input[type="email"] {
+    width: 100%;
+    /* Makes input fields take up the full width of their container */
+    padding: 10px;
+    /* Increases padding for a bigger input area */
+    font-size: 16px;
+    /* Optional: increases font size for better readability */
+    box-sizing: border-box;
+    /* Ensures padding doesn't increase overall width */
+    border-color: #113F67;
+    border-radius: 4px;
+    border-width: 1px;
+}
+
+.form-container label {
+    margin-bottom: 5px;
+    /* Adjust the spacing as needed */
+}
+
+.form-container input[type="password"] {
+    margin-top: 5px;
+    /* Adjust the spacing as needed */
+}
+
+.confirm-button {
+    background-color: #113F67;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    /* Makes input fields take up the full width of their container */
+    padding: 15px;
+    /* Increases padding for a bigger input area */
+    font-size: 16px;
+    /* Optional: increases font size for better readability */
+    box-sizing: border-box;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+.confirm-button a{
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
