@@ -248,21 +248,9 @@ document.getElementById('FileTask').addEventListener('change', function (e) {
 // Fetch komentar yang ada
 function loadComments() {
     fetch(commentApiUrl)
-        .then(res => res.json()) // <--- PERHATIKAN pakai json(), bukan text()
-        .then(data => {
-            const commentList = document.getElementById('comment-list');
-            commentList.innerHTML = '';
-
-            data.forEach(comment => {
-                const commentDiv = document.createElement('div');
-                commentDiv.classList.add('comment-item'); // Tambahin class kalau mau styling
-                commentDiv.innerHTML = `
-                    <strong>${comment.username}</strong>:<br/>
-                    ${comment.comment}
-                    <hr/>
-                `;
-                commentList.appendChild(commentDiv);
-            });
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('comment-list').innerHTML = html;
         })
         .catch(error => {
             console.error('Error loading comments:', error);
@@ -276,16 +264,19 @@ document.getElementById('comment-form').addEventListener('submit', async functio
 
     const formData = new FormData(this);
 
-    // Ambil ModulID dan UserID dari URL
+    // Get the current pathname to extract ModulID and UserID
     const url = window.location.pathname;
     const pathParts = url.split('/');
-    const userId = pathParts[2];
-    const modulId = pathParts[4];
 
-    const dynamicCommentApiUrl = `http://localhost:8000/modul/${modulId}/comments`;
+    const userId = pathParts[2]; // Assuming '2' is the user ID in URL like '/students/4/courses/3/modul'
+    const modul = pathParts[4];  // Assuming '4' is the course (modul) ID
+
+    // Append ModulID and UserID to the FormData
+    formData.append('ModulID', modul);  // Append the ModulID from URL
+    formData.append('UserID', userId);  // Append the UserID from URL
 
     try {
-        const response = await fetch(dynamicCommentApiUrl, {
+        const response = await fetch(commentApiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -293,15 +284,15 @@ document.getElementById('comment-form').addEventListener('submit', async functio
             body: JSON.stringify({
                 username: this.elements['username'].value,
                 comment: this.elements['comment'].value,
-                ModulId: modulId,
+                ModulId: modul, // You can use `modul` or `course_id` based on your backend's expected parameter
                 UserID: userId
             })
         });
 
         if (response.ok) {
             alert('Komentar berhasil dikirim!');
-            this.reset();
-            loadComments();
+            this.reset(); // Reset the form after successful submission
+            loadComments(); // Reload comments
         } else {
             const resData = await response.json();
             alert('Gagal mengirim komentar: ' + (resData.message || 'Terjadi kesalahan'));
@@ -311,7 +302,6 @@ document.getElementById('comment-form').addEventListener('submit', async functio
         alert('Terjadi kesalahan saat mengirim komentar.');
     }
 });
-
 
 
 
