@@ -150,3 +150,36 @@ video {
     }
 }
 
+.comment-box {
+    /* border: 2px solid black; */
+    border-radius: 5px;
+    background-color: #F0F1F2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    max-width: 650px; /* Ukuran kotak utama */
+}
+.comment-content {
+    margin-bottom: 10px;
+}
+
+.reply-list {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.reply-box {
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    max-width: 600px; /* Ukuran kotak balasan */
+    margin-left: 40px; /* Jarak dari kiri */
+    margin-top: 10px;  /* Jarak antar balasan */
+}
+
+.comment-box, .reply-box {
+    word-wrap: break-word; /* Membungkus kata panjang */
+    overflow-wrap: break-word; /* Alternatif modern */
+    white-space: normal; /* Supaya teks bisa turun ke bawah */
+}
+
