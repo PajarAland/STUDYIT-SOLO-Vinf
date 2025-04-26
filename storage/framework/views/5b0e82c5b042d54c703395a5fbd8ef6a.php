@@ -89,6 +89,30 @@
         <button type="submit" class="btn btn-primary">Kirim Komentar</button>
     </form>
 
+    <!-- Modal Reply -->
+<div id="replyModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <h5>Reply Komentar</h5>
+    <form id="reply-form">
+      <input type="hidden" id="reply-parent-id">
+      <div class="mb-3">
+        <label for="reply-username">Nama</label>
+        <input type="text" id="reply-username" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="reply-comment">Komentar</label>
+        <textarea id="reply-comment" class="form-control" rows="3" required></textarea>
+      </div>
+      <div class="button-group">
+  <button type="submit" class="btn btn-primary">Kirim Reply</button>
+  <button type="button" class="btn btn-secondary" id="close-reply-modal">Batal</button>
+</div>
+    </form>
+  </div>
+</div>
+
+
+
     <!-- Daftar komentar -->
     <div id="comment-list" style="margin-top: 20px;">
         <!-- Komentar akan dimuat disini -->
@@ -253,83 +277,85 @@ document.getElementById('FileTask').addEventListener('change', function (e) {
 // const commentApiUrl = `http://localhost:8000/modul/${modul}/comments`; // Ganti dengan route Laravel yang sesuai
 
 // Fetch komentar yang ada
-function loadComments() {
+async function loadComments() {
     const url = window.location.pathname;
     const pathParts = url.split('/');
     const modul = pathParts[4];
 
-    fetch(commentApiUrl)
-        .then(res => res.json())
-        .then(data => {
-            const filteredComments = data.filter(comment => comment.ModulID == modul);
+    try {
+        // Fetch comments dan replies
+        const commentResponse = await fetch(commentApiUrl);
+        const replyResponse = await fetch('http://localhost:3000/api/reply/');
 
-            const mainComments = filteredComments.filter(c => !c.ParentID);
-            const replies = filteredComments.filter(c => c.ParentID);
+        const commentsData = await commentResponse.json();
+        const repliesData = await replyResponse.json();
 
-            const commentList = document.getElementById('comment-list');
-            commentList.innerHTML = '';
+        const filteredComments = commentsData.filter(comment => comment.ModulID == modul);
 
-            mainComments.forEach(comment => {
-                const commentItem = document.createElement('div');
-                commentItem.classList.add('comment-box', 'mb-3', 'p-3');
+        const commentList = document.getElementById('comment-list');
+        commentList.innerHTML = '';
 
-                commentItem.innerHTML = `
-                    <div class="comment-content">
-                        <strong>${comment.username}</strong>
-                        <p>${comment.comment}</p>
-                        <a href="#" class="reply-button" data-id="${comment.id}">Reply</a>
-                    </div>
-                    <div class="reply-list"></div>
-                `;
+        filteredComments.forEach(comment => {
+            const commentItem = document.createElement('div');
+            commentItem.classList.add('comment-box', 'mb-3', 'p-3');
 
-                // Cari balasan untuk komentar ini
-                const replyList = commentItem.querySelector('.reply-list');
+            commentItem.innerHTML = `
+            <div class="comment-content">
+                <strong>${comment.username}</strong>
+                <p>${comment.comment}</p>
+                <button type="button" class="reply-button" data-id="${comment.id}">Reply</button>
+            </div>
+            <div class="reply-list"></div>
+        `;
 
-                replies.filter(r => r.ParentID == comment.id).forEach(reply => {
+            const replyList = commentItem.querySelector('.reply-list');
+
+            // Cari dan tampilkan semua reply yang sesuai
+            repliesData
+                .filter(reply => reply.CommentID == comment.id)
+                .forEach(reply => {
                     const replyItem = document.createElement('div');
-                    replyItem.classList.add('reply-box', 'mt-2', 'p-2');
+                    replyItem.classList.add('reply-box', 'mt-2', 'p-2', 'bg-light', 'rounded');
                     replyItem.innerHTML = `
                         <strong>${reply.username}</strong>
-                        <p>${reply.comment}</p>
+                        <p>${reply.replies}</p>
                     `;
                     replyList.appendChild(replyItem);
                 });
 
-                commentList.appendChild(commentItem);
-            });
-
-            // Buat tombol Reply berfungsi
-            document.querySelectorAll('.reply-button').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.getElementById('parent-id').value = this.dataset.id;
-                    document.getElementById('username').focus();
-                });
-            });
-        })
-        .catch(error => {
-            console.error('Error loading comments:', error);
+            commentList.appendChild(commentItem);
         });
+
+        // Buat tombol Reply berfungsi
+        document.querySelectorAll('.reply-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parentId = this.dataset.id;
+                document.getElementById('replyModal').style.display = 'flex';
+                document.getElementById('reply-parent-id').value = parentId;
+            });
+        });
+
+        // Tombol Close Modal
+        document.getElementById('close-reply-modal').addEventListener('click', function() {
+            document.getElementById('replyModal').style.display = 'none';
+        });
+
+    } catch (error) {
+        console.error('Error loading comments or replies:', error);
+    }
 }
 
-
-// Kirim komentar baru
-// Kirim komentar baru
+// Submit komentar baru
 document.getElementById('comment-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const formData = new FormData(this);
 
-    // Get the current pathname to extract ModulID and UserID
     const url = window.location.pathname;
     const pathParts = url.split('/');
-
-    const userId = pathParts[2]; // Assuming '2' is the user ID in URL like '/students/4/courses/3/modul'
-    const modul = pathParts[4];  // Assuming '4' is the course (modul) ID
-
-    // Append ModulID and UserID to the FormData
-    formData.append('ModulID', modul);  // Append the ModulID from URL
-    formData.append('UserID', userId);  // Append the UserID from URL
+    const userId = pathParts[2];
+    const modul = pathParts[4];
 
     try {
         const response = await fetch(commentApiUrl, {
@@ -340,15 +366,15 @@ document.getElementById('comment-form').addEventListener('submit', async functio
             body: JSON.stringify({
                 username: this.elements['username'].value,
                 comment: this.elements['comment'].value,
-                ModulId: modul, // You can use `modul` or `course_id` based on your backend's expected parameter
+                ModulID: modul,
                 UserID: userId
             })
         });
 
         if (response.ok) {
             alert('Komentar berhasil dikirim!');
-            this.reset(); // Reset the form after successful submission
-            loadComments(); // Reload comments
+            this.reset();
+            loadComments();
         } else {
             const resData = await response.json();
             alert('Gagal mengirim komentar: ' + (resData.message || 'Terjadi kesalahan'));
@@ -359,6 +385,49 @@ document.getElementById('comment-form').addEventListener('submit', async functio
     }
 });
 
+// Submit reply
+document.getElementById('reply-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const parentId = document.getElementById('reply-parent-id').value;
+    const username = document.getElementById('reply-username').value;
+    const replies = document.getElementById('reply-comment').value;
+
+    const url = window.location.pathname;
+    const pathParts = url.split('/');
+    const userId = pathParts[2];
+    const modul = pathParts[4];
+
+    try {
+        const response = await fetch('http://localhost:3000/api/reply/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                replies: replies,
+                CommentID: parentId,   // Yang benar CommentID ya, bukan ParentID
+                UserID: userId
+            })
+        });
+
+        if (response.ok) {
+            alert('Reply berhasil dikirim!');
+            document.getElementById('reply-form').reset();
+            document.getElementById('replyModal').style.display = 'none';
+            loadComments();
+        } else {
+            const resData = await response.json();
+            alert('Gagal kirim reply: ' + (resData.message || 'Terjadi kesalahan'));
+        }
+    } catch (error) {
+        console.error('Error submitting reply:', error);
+        alert('Terjadi kesalahan saat mengirim reply.');
+    }
+});
+
+
 
 
 // Panggil saat halaman dimuat
@@ -366,5 +435,4 @@ loadComments();
 
     </script>
 </body>
-</html>
-<?php /**PATH C:\TelkomUniversity\Semester6\TubesKomentar\STUDYIT-SOLO-Vinf\resources\views/user/modul.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\TelkomUniversity\Semester6\TubesKomentar\STUDYIT-SOLO-Vinf\resources\views/user/modul.blade.php ENDPATH**/ ?>
