@@ -75,6 +75,9 @@ Route::post('admin/tasks', [AdminController::class, 'store']);
 Route::get('/admin/comments/{id}/edit', [AdminController::class, 'editComment']);
 Route::put('admin/comments/{id}', [AdminController::class, 'update']);
 Route::delete('admin/comments/{id}', [AdminController::class, 'destroy']); 
+Route::get('/admin/replys/{id}/edit', [AdminController::class, 'editComment']);
+Route::put('admin/replys/{id}', [AdminController::class, 'update']);
+Route::delete('admin/replys/{id}', [AdminController::class, 'destroy']); 
 
 
 

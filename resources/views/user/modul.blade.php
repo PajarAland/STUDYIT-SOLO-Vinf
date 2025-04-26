@@ -89,6 +89,30 @@
         <button type="submit" class="btn btn-primary">Kirim Komentar</button>
     </form>
 
+    <!-- Modal Reply -->
+<div id="replyModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <h5>Reply Komentar</h5>
+    <form id="reply-form">
+      <input type="hidden" id="reply-parent-id">
+      <div class="mb-3">
+        <label for="reply-username">Nama</label>
+        <input type="text" id="reply-username" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="reply-comment">Komentar</label>
+        <textarea id="reply-comment" class="form-control" rows="3" required></textarea>
+      </div>
+      <div class="button-group">
+  <button type="submit" class="btn btn-primary">Kirim Reply</button>
+  <button type="button" class="btn btn-secondary" id="close-reply-modal">Batal</button>
+</div>
+    </form>
+  </div>
+</div>
+
+
+
     <!-- Daftar komentar -->
     <div id="comment-list" style="margin-top: 20px;">
         <!-- Komentar akan dimuat disini -->
@@ -299,13 +323,24 @@ function loadComments() {
             });
 
             // Buat tombol Reply berfungsi
-            document.querySelectorAll('.reply-button').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.getElementById('parent-id').value = this.dataset.id;
-                    document.getElementById('username').focus();
-                });
-            });
+// Setelah load komentar
+document.querySelectorAll('.reply-button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const parentId = this.dataset.id;
+        
+        // Buka modal
+        document.getElementById('replyModal').style.display = 'flex';
+        
+        // Set parent id ke input hidden
+        document.getElementById('reply-parent-id').value = parentId;
+    });
+});
+
+// Tombol batal / close modal
+document.getElementById('close-reply-modal').addEventListener('click', function() {
+    document.getElementById('replyModal').style.display = 'none';
+});
         })
         .catch(error => {
             console.error('Error loading comments:', error);
@@ -358,6 +393,49 @@ document.getElementById('comment-form').addEventListener('submit', async functio
         alert('Terjadi kesalahan saat mengirim komentar.');
     }
 });
+
+document.getElementById('reply-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const parentId = document.getElementById('reply-parent-id').value;
+    const username = document.getElementById('reply-username').value;
+    const replies = document.getElementById('reply-comment').value;
+
+    const url = window.location.pathname;
+    const pathParts = url.split('/');
+    const userId = pathParts[2];
+    const modul = pathParts[4];
+
+    try {
+        const response = await fetch('http://localhost:3000/api/reply/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                replies: replies,
+                ModulID: modul,
+                UserID: userId,
+                ParentID: parentId
+            })
+        });
+
+        if (response.ok) {
+            alert('Reply berhasil dikirim!');
+            document.getElementById('reply-form').reset();
+            document.getElementById('replyModal').style.display = 'none';
+            loadComments(); // Reload komentar
+        } else {
+            const resData = await response.json();
+            alert('Gagal kirim reply: ' + (resData.message || 'Terjadi kesalahan'));
+        }
+    } catch (error) {
+        console.error('Error submitting reply:', error);
+        alert('Terjadi kesalahan saat mengirim reply.');
+    }
+});
+
 
 
 

@@ -57,7 +57,7 @@
     <div class="submit-container">
         <form id="submit-task" enctype="multipart/form-data">
             <input type="file" class="form-control" id="FileTask" name="FileTask" required>
-             <!-- Preview Area -->
+            <!-- Preview Area -->
             <div id="file-preview" class="mt-3"></div>
             <!-- <img id="image-preview" src="#" alt="Image Preview" style="display: none; max-width: 100%; margin-top: 10px;"> -->
             <div class="mt-3">
@@ -67,6 +67,9 @@
     </div>
 
     <div class="discussion-container mt-5 p-4 bg-light">
+    <h4>Forum Diskusi</h4>
+
+<div class="discussion-container mt-5 p-4 bg-light">
     <h4>Forum Diskusi</h4>
 
     <!-- Form Komentar -->
@@ -81,13 +84,41 @@
             <textarea id="comment" name="comment" class="form-control" rows="3" required></textarea>
         </div>
 
+        <input type="hidden" id="parent-id" name="parent_id" value=""> <!-- Tambahan untuk balasan -->
+
         <button type="submit" class="btn btn-primary">Kirim Komentar</button>
     </form>
 
-    <!-- Daftar Komentar -->
-    <div id="comment-list">
-        <!-- Komentar akan dimuat di sini -->
+    <!-- Modal Reply -->
+<div id="replyModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <h5>Reply Komentar</h5>
+    <form id="reply-form">
+      <input type="hidden" id="reply-parent-id">
+      <div class="mb-3">
+        <label for="reply-username">Nama</label>
+        <input type="text" id="reply-username" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="reply-comment">Komentar</label>
+        <textarea id="reply-comment" class="form-control" rows="3" required></textarea>
+      </div>
+      <div class="button-group">
+  <button type="submit" class="btn btn-primary">Kirim Reply</button>
+  <button type="button" class="btn btn-secondary" id="close-reply-modal">Batal</button>
+</div>
+    </form>
+  </div>
+</div>
+
+
+
+    <!-- Daftar komentar -->
+    <div id="comment-list" style="margin-top: 20px;">
+        <!-- Komentar akan dimuat disini -->
     </div>
+</div>
+
 </div>
 
     <script>
@@ -247,15 +278,75 @@ document.getElementById('FileTask').addEventListener('change', function (e) {
 
 // Fetch komentar yang ada
 function loadComments() {
+    const url = window.location.pathname;
+    const pathParts = url.split('/');
+    const modul = pathParts[4];
+
     fetch(commentApiUrl)
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById('comment-list').innerHTML = html;
+        .then(res => res.json())
+        .then(data => {
+            const filteredComments = data.filter(comment => comment.ModulID == modul);
+
+            const mainComments = filteredComments.filter(c => !c.ParentID);
+            const replies = filteredComments.filter(c => c.ParentID);
+
+            const commentList = document.getElementById('comment-list');
+            commentList.innerHTML = '';
+
+            mainComments.forEach(comment => {
+                const commentItem = document.createElement('div');
+                commentItem.classList.add('comment-box', 'mb-3', 'p-3');
+
+                commentItem.innerHTML = `
+                    <div class="comment-content">
+                        <strong>${comment.username}</strong>
+                        <p>${comment.comment}</p>
+                        <a href="#" class="reply-button" data-id="${comment.id}">Reply</a>
+                    </div>
+                    <div class="reply-list"></div>
+                `;
+
+                // Cari balasan untuk komentar ini
+                const replyList = commentItem.querySelector('.reply-list');
+
+                replies.filter(r => r.ParentID == comment.id).forEach(reply => {
+                    const replyItem = document.createElement('div');
+                    replyItem.classList.add('reply-box', 'mt-2', 'p-2');
+                    replyItem.innerHTML = `
+                        <strong>${reply.username}</strong>
+                        <p>${reply.comment}</p>
+                    `;
+                    replyList.appendChild(replyItem);
+                });
+
+                commentList.appendChild(commentItem);
+            });
+
+            // Buat tombol Reply berfungsi
+// Setelah load komentar
+document.querySelectorAll('.reply-button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const parentId = this.dataset.id;
+        
+        // Buka modal
+        document.getElementById('replyModal').style.display = 'flex';
+        
+        // Set parent id ke input hidden
+        document.getElementById('reply-parent-id').value = parentId;
+    });
+});
+
+// Tombol batal / close modal
+document.getElementById('close-reply-modal').addEventListener('click', function() {
+    document.getElementById('replyModal').style.display = 'none';
+});
         })
         .catch(error => {
             console.error('Error loading comments:', error);
         });
 }
+
 
 // Kirim komentar baru
 // Kirim komentar baru
@@ -303,6 +394,49 @@ document.getElementById('comment-form').addEventListener('submit', async functio
     }
 });
 
+document.getElementById('reply-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const parentId = document.getElementById('reply-parent-id').value;
+    const username = document.getElementById('reply-username').value;
+    const replies = document.getElementById('reply-comment').value;
+
+    const url = window.location.pathname;
+    const pathParts = url.split('/');
+    const userId = pathParts[2];
+    const modul = pathParts[4];
+
+    try {
+        const response = await fetch('http://localhost:3000/api/reply/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                replies: replies,
+                ModulID: modul,
+                UserID: userId,
+                ParentID: parentId
+            })
+        });
+
+        if (response.ok) {
+            alert('Reply berhasil dikirim!');
+            document.getElementById('reply-form').reset();
+            document.getElementById('replyModal').style.display = 'none';
+            loadComments(); // Reload komentar
+        } else {
+            const resData = await response.json();
+            alert('Gagal kirim reply: ' + (resData.message || 'Terjadi kesalahan'));
+        }
+    } catch (error) {
+        console.error('Error submitting reply:', error);
+        alert('Terjadi kesalahan saat mengirim reply.');
+    }
+});
+
+
 
 
 // Panggil saat halaman dimuat
@@ -310,5 +444,4 @@ loadComments();
 
     </script>
 </body>
-</html>
-<?php /**PATH C:\Users\alienware\Documents\WebPro\PROTING3\WebStudyIT\resources\views/user/modul.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\Users\alienware\Documents\WebPro\PROTING3\WebStudyIT\resources\views/user/modul.blade.php ENDPATH**/ ?>
